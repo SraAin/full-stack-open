@@ -8,14 +8,23 @@ const App = () => {
   const [average, setAverage] = useState(0);
 
   // Muutetaan hooksien tilan arvoa
-  const goodClick = () => {setGood(good + 1); setAverage(average + 1)};
-  const neutralClick = () => {setNeutral(neutral + 1); setAverage(average + 0)};
-  const badClick = () => {setBad(bad + 1); setAverage(average - 1)};
+  const goodClick = () => {
+    setGood(good + 1);
+    setAverage(average + 1);
+  };
+  const neutralClick = () => {
+    setNeutral(neutral + 1);
+    setAverage(average + 0);
+  };
+  const badClick = () => {
+    setBad(bad + 1);
+    setAverage(average - 1);
+  };
 
   // Laskentoja
   const allClicks = good + neutral + bad;
   const avgReview = average / allClicks;
-  const positiveReviews = good / allClicks * 100;
+  const positiveReviews = (good / allClicks) * 100;
 
   return (
     <div>
@@ -47,9 +56,9 @@ const Button = (props) => {
 const Statistics = (props) => {
   if (props.allClicks === 0) {
     return (
-    <div>
-      <p>No feedback given</p>
-    </div>
+      <div>
+        <p>No feedback given</p>
+      </div>
     );
   }
   return (
@@ -67,9 +76,16 @@ const Statistics = (props) => {
 const StatisticLine = (props) => {
   return (
     <div>
-      <p>{props.text} {props.value}</p>
+      <table>
+        <tbody>
+          <tr>
+            <td>{props.text}</td>
+            <td>{props.value}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  )
-}
+  );
+};
 
 export default App;
