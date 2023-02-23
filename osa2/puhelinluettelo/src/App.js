@@ -8,16 +8,25 @@ const App = () => {
     event.preventDefault();
     // console.log('Button clicked', event.target)
     const newObj = {
-      name: newName
-    }
-    setPersons(persons.concat(newObj))
+      name: newName,
+    };
+
+    checkForDublicates(newObj, newName);
     setNewName('');
-  }
+  };
 
   const handleNameChange = (event) => {
     // console.log(event.target.value);
     setNewName(event.target.value);
-  }
+  };
+
+  const checkForDublicates = (newObj, newName) => {
+    persons.map((person) => {
+      return newName === person.name
+        ? alert(`${newName} is already added to phonebook`)
+        : setPersons(persons.concat(newObj));
+    });
+  };
 
   return (
     <div>
@@ -31,9 +40,9 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      {persons.map((person) => 
+      {persons.map((person) => (
         <p key={person.name}>{person.name}</p>
-      )}
+      ))}
     </div>
   );
 };
