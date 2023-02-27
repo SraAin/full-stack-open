@@ -11,21 +11,17 @@ const App = () => {
       name: newName,
     };
 
-    checkForDublicates(newObj, newName);
+    // Ehdollinen operaattori, jolla varmistetaan, että uutta nimeä ei löydy puhelinluettelosta
+    persons.find((person) => person.name.includes(newName))
+      ? alert(`${newName} is already added to phonebook`)
+      : setPersons(persons.concat(newObj));
+
     setNewName('');
   };
 
   const handleNameChange = (event) => {
     // console.log(event.target.value);
     setNewName(event.target.value);
-  };
-
-  const checkForDublicates = (newObj, newName) => {
-    persons.map((person) => {
-      return newName === person.name
-        ? alert(`${newName} is already added to phonebook`)
-        : setPersons(persons.concat(newObj));
-    });
   };
 
   return (
