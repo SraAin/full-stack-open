@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const FilterPerson = ({filter, handleFilterChange}) => {
+const FilterPerson = ({ filter, handleFilterChange }) => {
   return (
     <div>
       Filter shown with <input value={filter} onChange={handleFilterChange} />
     </div>
-  )
-}
+  );
+};
 
 const PersonForm = ({
   addPerson,
@@ -56,12 +56,14 @@ const App = () => {
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    console.log('effect')
-    axios.get('http://localhost:3001/persons').then(response => {
-      console.log('promise fulfilled')
-      setPersons(response.data)
-    })
-  }, [])
+    console.log('effect');
+    axios
+      .get('http://localhost:3001/persons')
+      .then((response) => {
+        console.log('promise fulfilled');
+        setPersons(response.data);
+    });
+  }, []);
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -78,6 +80,12 @@ const App = () => {
 
     setNewName('');
     setNewNumber('');
+
+    axios
+      .post('http://localhost:3001/persons', newObj)
+      .then((response) => {
+        console.log(response);
+    });
   };
 
   const searchNames =
