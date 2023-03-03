@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import personService from './services/persons';
 
 const FilterPerson = ({ filter, handleFilterChange }) => {
   return (
@@ -56,12 +56,8 @@ const App = () => {
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    console.log('effect');
-    axios
-      .get('http://localhost:3001/persons')
-      .then((response) => {
-        console.log('promise fulfilled');
-        setPersons(response.data);
+    personService.getAll().then((initialPersons) => {
+      setPersons(initialPersons);
     });
   }, []);
 
@@ -76,16 +72,12 @@ const App = () => {
     // Ehdollinen operaattori, jolla varmistetaan, että uutta nimeä ei löydy puhelinluettelosta
     persons.find((person) => person.name.includes(newName))
       ? alert(`${newName} is already added to phonebook`)
-      : setPersons(persons.concat(newObj));
+      : personService.create(newObj).then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+        });
 
     setNewName('');
     setNewNumber('');
-
-    axios
-      .post('http://localhost:3001/persons', newObj)
-      .then((response) => {
-        console.log(response);
-    });
   };
 
   const searchNames =
