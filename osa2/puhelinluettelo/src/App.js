@@ -31,20 +31,23 @@ const PersonForm = ({
   );
 };
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, deletePerson }) => {
   return (
     <div>
       {persons.map((person) => (
-        <Person key={person.name} person={person} />
+        <Person key={person.name} person={person} deletePerson={deletePerson} />
       ))}
     </div>
   );
 };
 
-const Person = ({ person }) => {
+const Person = ({ person, deletePerson }) => {
   return (
     <p>
       {person.name} {person.number}
+      <button onClick={() => deletePerson(person.id, person.name)}>
+        Delete
+      </button>
     </p>
   );
 };
@@ -80,6 +83,14 @@ const App = () => {
     setNewNumber('');
   };
 
+  const deletePerson = (id, name) => {
+    if (window.confirm(`Delete ${name}?`) === true) {
+      personService.remove(id).then(() => {
+        setPersons(persons.filter((person) => person.id !== id));
+      });
+    }
+  };
+
   const searchNames =
     filter === ''
       ? persons
@@ -113,7 +124,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons persons={searchNames} />
+      <Persons persons={searchNames} deletePerson={deletePerson} />
     </div>
   );
 };
