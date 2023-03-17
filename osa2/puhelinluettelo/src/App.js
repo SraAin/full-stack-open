@@ -52,11 +52,30 @@ const Person = ({ person, deletePerson }) => {
   );
 };
 
+const Notification = ({ message }) => {
+  const infoMsgStyle = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  };
+
+  if (message === null) {
+    return null;
+  }
+
+  return <div style={infoMsgStyle}>{message}</div>;
+};
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
+  const [infoMsg, setInfoMsg] = useState(null);
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -85,10 +104,18 @@ const App = () => {
                 person.name !== newName ? person : response
               )
             );
+            setInfoMsg(`${newName} number has been changed`);
+            setTimeout(() => {
+              setInfoMsg(null);
+            }, 5000);
           })
         : console.log('Number does not change')
       : personService.create(newObj).then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
+          setInfoMsg(`Added ${newName}`);
+          setTimeout(() => {
+            setInfoMsg(null);
+          }, 5000);
         });
 
     setNewName('');
@@ -99,6 +126,10 @@ const App = () => {
     if (window.confirm(`Delete ${name}?`) === true) {
       personService.remove(id).then(() => {
         setPersons(persons.filter((person) => person.id !== id));
+        setInfoMsg(`Deleted ${name}`);
+        setTimeout(() => {
+          setInfoMsg(null);
+        }, 5000);
       });
     }
   };
@@ -126,6 +157,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={infoMsg} />
       <FilterPerson filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add</h2>
       <PersonForm
