@@ -52,9 +52,9 @@ const Person = ({ person, deletePerson }) => {
   );
 };
 
-const Notification = ({ message }) => {
+const Notification = ({ message, color }) => {
   const infoMsgStyle = {
-    color: 'green',
+    color: color,
     background: 'lightgrey',
     fontSize: 20,
     borderStyle: 'solid',
@@ -76,6 +76,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
   const [infoMsg, setInfoMsg] = useState(null);
+  const [msgColor, setMsgColor] = useState();
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -105,14 +106,23 @@ const App = () => {
               )
             );
             setInfoMsg(`${newName} number has been changed`);
+            setMsgColor('green');
             setTimeout(() => {
               setInfoMsg(null);
             }, 5000);
+          }).catch(error => {
+            setInfoMsg(`Information of ${newName} has already been removed from server`)
+            setMsgColor('red');
+            setTimeout(() => {
+              setInfoMsg(null);
+            }, 5000);
+            setPersons(persons.filter(p => p.name !== newName))
           })
         : console.log('Number does not change')
       : personService.create(newObj).then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
           setInfoMsg(`Added ${newName}`);
+          setMsgColor('green');
           setTimeout(() => {
             setInfoMsg(null);
           }, 5000);
@@ -127,6 +137,7 @@ const App = () => {
       personService.remove(id).then(() => {
         setPersons(persons.filter((person) => person.id !== id));
         setInfoMsg(`Deleted ${name}`);
+        setMsgColor('green');
         setTimeout(() => {
           setInfoMsg(null);
         }, 5000);
@@ -157,7 +168,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={infoMsg} />
+      <Notification color={msgColor} message={infoMsg} />
       <FilterPerson filter={filter} handleFilterChange={handleFilterChange} />
       <h2>Add</h2>
       <PersonForm

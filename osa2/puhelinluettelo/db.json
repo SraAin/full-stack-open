@@ -2,23 +2,13 @@
   "persons": [
     {
       "name": "Dan Abramov",
-      "number": "74654687",
+      "number": "48743135485",
       "id": 3
     },
     {
       "name": "Mary Poppendieck",
       "number": "79841358798",
       "id": 4
-    },
-    {
-      "name": "Marika Kello",
-      "number": "5421578313",
-      "id": 5
-    },
-    {
-      "name": "Jukka Taku",
-      "number": "48454",
-      "id": 6
     }
   ]
 }
