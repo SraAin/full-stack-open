@@ -72,9 +72,21 @@ const App = () => {
       number: newNumber,
     };
 
-    // Ehdollinen operaattori, jolla varmistetaan, että uutta nimeä ei löydy puhelinluettelosta
+    const person = persons.find((p) => newName === p.name);
+    const chagedNumber = { ...person, number: newNumber };
+
     persons.find((person) => person.name.includes(newName))
-      ? alert(`${newName} is already added to phonebook`)
+      ? window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        ) === true
+        ? personService.update(person.id, chagedNumber).then((response) => {
+            setPersons(
+              persons.map((person) =>
+                person.name !== newName ? person : response
+              )
+            );
+          })
+        : console.log('Number does not change')
       : personService.create(newObj).then((returnedPerson) => {
           setPersons(persons.concat(returnedPerson));
         });
