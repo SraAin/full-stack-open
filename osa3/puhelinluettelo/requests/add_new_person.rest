@@ -1,7 +1,7 @@
-POST http://localhost:3001/api/persons
+POST https://phonebook-backend-nuw0.onrender.com/api/persons
 Content-Type: application/json
 
 {
-    "name": "Leija Lohi",
+    "name": "Samu Heli",
     "number": "040 123 1234"
 }
