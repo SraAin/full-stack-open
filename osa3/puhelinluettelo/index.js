@@ -1,4 +1,7 @@
 const express = require('express');
+const morgan = require('morgan');
+const cors = require('cors');
+
 const app = express();
 
 let persons = [
@@ -24,6 +27,12 @@ let persons = [
   },
 ];
 
+app.use(express.json());
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+app.use(cors());
+
+morgan.token('body', (request) => JSON.stringify(request.body));
+
 app.get('/api/persons', (request, response) => {
     response.json(persons);
 });
@@ -46,6 +55,38 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end();
 })
 
+const generateId = () => {
+  const maxId = persons.length > 0
+    ? Math.max(...persons.map(p => p.id))
+    : 0
+  
+  return maxId + 1;
+}
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body;
+
+  if (!body.name || !body.number) {
+    return response.status(400).json({
+      error: 'Name and/or number missing'
+    })
+  } else if (persons.find(p => p.name.includes(body.name))) {
+    return response.status(400).json({
+      error: 'Name is already in use'
+    })
+  }
+
+  const person = {
+    id: generateId(),
+    name: body.name,
+    number: body.number,
+  }
+
+  persons = persons.concat(person);
+
+  response.json(person);
+})
+
 app.get('/info', (request, response) => {
     const date = new Date();
     console.log(date);
@@ -57,7 +98,7 @@ ${date}`
     );
 })
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
