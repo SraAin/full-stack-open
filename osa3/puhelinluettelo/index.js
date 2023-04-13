@@ -30,6 +30,20 @@ let persons = [
   },
 ];
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+  
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(error);
+}
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
 app.use(express.json());
 app.use(
   morgan(':method :url :status :res[content-length] - :response-time ms :body')
@@ -45,16 +59,16 @@ app.get('/api/persons', (request, response) => {
   });
 });
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
   Person.findById(request.params.id).then((person) => {
     response.json(person);
-  });
+  }).catch(error => next(error));
 });
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id).then((person) => {
     response.status(204).end();
-  });
+  }).catch(error => next(error));
 });
 
 /*const generateId = () => {
@@ -63,7 +77,7 @@ app.delete('/api/persons/:id', (request, response) => {
   return maxId + 1;
 };*/
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body;
 
   if (body === undefined) {
@@ -77,11 +91,14 @@ app.post('/api/persons', (request, response) => {
     number: body.number,
   });
 
-  person.save().then((savedPerson) => {
-    console.log(`added ${person.name} number ${person.number} to phonebook`);
-    response.json(savedPerson);
-  });
+  person
+    .save()
+    .then((savedPerson) => {
+      console.log(`added ${person.name} number ${person.number} to phonebook`);
+      response.json(savedPerson);
+    }).catch(error => next(error));
 });
+
 
 /*app.post('/api/persons', (request, response) => {
   const body = request.body;
@@ -111,12 +128,11 @@ app.get('/info', (request, response) => {
   const date = new Date();
   console.log(date);
 
-  response.end(
-    `Phonebook has info for ${persons.length} people 
-
-${date}`
-  );
+  response.end(`Phonebook has info for ${persons.length} people ${date}`);
 });
+
+app.use(unknownEndpoint);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
