@@ -1,8 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 
 const app = express();
+
+const Person = require('./models/person');
 
 let persons = [
   {
@@ -28,43 +31,59 @@ let persons = [
 ];
 
 app.use(express.json());
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+app.use(
+  morgan(':method :url :status :res[content-length] - :response-time ms :body')
+);
 app.use(cors());
 app.use(express.static('build'));
 
 morgan.token('body', (request) => JSON.stringify(request.body));
 
 app.get('/api/persons', (request, response) => {
-    response.json(persons);
+  Person.find({}).then((person) => {
+    response.json(person);
+  });
 });
 
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id);
-    const person = persons.find(p => p.id === id);
-
-    if (person) {
-        response.json(person);
-    } else {
-        response.status(404).end();
-    }
-})
+  Person.findById(request.params.id).then((person) => {
+    response.json(person);
+  });
+});
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id);
-    persons = persons.filter(person => person.id !== id)
-
+  Person.findByIdAndRemove(request.params.id).then((person) => {
     response.status(204).end();
-})
+  });
+});
 
-const generateId = () => {
-  const maxId = persons.length > 0
-    ? Math.max(...persons.map(p => p.id))
-    : 0
-  
+/*const generateId = () => {
+  const maxId = persons.length > 0 ? Math.max(...persons.map((p) => p.id)) : 0;
+
   return maxId + 1;
-}
+};*/
 
 app.post('/api/persons', (request, response) => {
+  const body = request.body;
+
+  if (body === undefined) {
+    return response.status(400).json({
+      error: 'Content missing',
+    });
+  }
+
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  });
+
+  person.save().then((savedPerson) => {
+    console.log(`added ${person.name} number ${person.number} to phonebook`);
+    response.json(savedPerson);
+  });
+});
+
+/*app.post('/api/persons', (request, response) => {
   const body = request.body;
 
   if (!body.name || !body.number) {
@@ -86,20 +105,20 @@ app.post('/api/persons', (request, response) => {
   persons = persons.concat(person);
 
   response.json(person);
-})
+})*/
 
 app.get('/info', (request, response) => {
-    const date = new Date();
-    console.log(date);
+  const date = new Date();
+  console.log(date);
 
-    response.end(
-      `Phonebook has info for ${persons.length} people 
+  response.end(
+    `Phonebook has info for ${persons.length} people 
 
 ${date}`
-    );
-})
+  );
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
