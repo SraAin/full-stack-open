@@ -7,7 +7,7 @@ const app = express();
 
 const Person = require('./models/person');
 
-let persons = [
+/*let persons = [
   {
     id: 1,
     name: 'Arto Hellas',
@@ -28,7 +28,7 @@ let persons = [
     name: 'Mary Poppendick',
     number: '39-23-6423857',
   },
-];
+];*/
 
 const errorHandler = (error, request, response, next) => {
   console.error(error.message);
@@ -119,35 +119,13 @@ app.put('/api/persons/:id', (request, response, next) => {
     .catch((error) => next(error));
 });
 
-/*app.post('/api/persons', (request, response) => {
-  const body = request.body;
-
-  if (!body.name || !body.number) {
-    return response.status(400).json({
-      error: 'Name and/or number missing'
-    })
-  } else if (persons.find(p => p.name.includes(body.name))) {
-    return response.status(400).json({
-      error: 'Name is already in use'
-    })
-  }
-
-  const person = {
-    id: generateId(),
-    name: body.name,
-    number: body.number,
-  }
-
-  persons = persons.concat(person);
-
-  response.json(person);
-})*/
-
 app.get('/info', (request, response) => {
   const date = new Date();
   console.log(date);
 
-  response.end(`Phonebook has info for ${persons.length} people ${date}`);
+  Person.find({}).then(person => {
+    response.end(`Phonebook has info for ${person.length} people ${date}`);
+  })
 });
 
 app.use(unknownEndpoint);
