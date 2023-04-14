@@ -126,6 +126,13 @@ const App = () => {
           setTimeout(() => {
             setInfoMsg(null);
           }, 5000);
+        }).catch(error => {
+          console.log(error.response.data);
+          setInfoMsg(`${error.response.data.error}`);
+          setMsgColor('red');
+          setTimeout(() => {
+            setInfoMsg(null);
+          }, 5000);
         });
 
     setNewName('');
