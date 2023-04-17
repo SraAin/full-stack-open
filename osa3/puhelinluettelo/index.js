@@ -55,10 +55,11 @@ app.use(express.static('build'));
 
 morgan.token('body', (request) => JSON.stringify(request.body));
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
   Person.find({}).then((person) => {
     response.json(person);
-  });
+  })
+  .catch((error) => next(error));
 });
 
 app.get('/api/persons/:id', (request, response, next) => {
