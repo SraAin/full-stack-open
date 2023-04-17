@@ -7,36 +7,13 @@ const app = express();
 
 const Person = require('./models/person');
 
-/*let persons = [
-  {
-    id: 1,
-    name: 'Arto Hellas',
-    number: '040-123456',
-  },
-  {
-    id: 2,
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-  },
-  {
-    id: 3,
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-  },
-  {
-    id: 4,
-    name: 'Mary Poppendick',
-    number: '39-23-6423857',
-  },
-];*/
-
 const errorHandler = (error, request, response, next) => {
   console.error(error.message);
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' });
   } else if (error.name === 'ValidationError') {
-    return response.status(400).json({error: error.message})
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);
@@ -56,10 +33,11 @@ app.use(express.static('build'));
 morgan.token('body', (request) => JSON.stringify(request.body));
 
 app.get('/api/persons', (request, response, next) => {
-  Person.find({}).then((person) => {
-    response.json(person);
-  })
-  .catch((error) => next(error));
+  Person.find({})
+    .then((person) => {
+      response.json(person);
+    })
+    .catch((error) => next(error));
 });
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -72,7 +50,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndRemove(request.params.id)
-    .then((person) => {
+    .then(() => {
       response.status(204).end();
     })
     .catch((error) => next(error));
@@ -126,9 +104,9 @@ app.get('/info', (request, response) => {
   const date = new Date();
   console.log(date);
 
-  Person.find({}).then(person => {
+  Person.find({}).then((person) => {
     response.end(`Phonebook has info for ${person.length} people ${date}`);
-  })
+  });
 });
 
 app.use(unknownEndpoint);
