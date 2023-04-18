@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+    "title": "Where to travel?",
+    "author": "Test Author",
+    "url": "www.wheretotravel.com",
+    "likes": "52"
+}
