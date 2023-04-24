@@ -1,34 +1,28 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
-const Blog = require('../models/blog')
+const Blog = require('../models/blog');
 
 const api = supertest(app);
 
 const blogs = [
   {
-    _id: '5a422a851b54a676234d17f7',
     title: 'React patterns',
     author: 'Michael Chan',
     url: 'https://reactpatterns.com/',
     likes: 7,
-    __v: 0,
   },
   {
-    _id: '5a422aa71b54a676234d17f8',
     title: 'Go To Statement Considered Harmful',
     author: 'Edsger W. Dijkstra',
     url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
     likes: 5,
-    __v: 0,
   },
   {
-    _id: '5a422bc61b54a676234d17fc',
     title: 'Type wars',
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
     likes: 2,
-    __v: 0,
   },
 ];
 
@@ -57,7 +51,7 @@ test('all blogs are returned', async () => {
 
 test('has a field called id', async () => {
   const response = await api.get('/api/blogs');
-  const id = response.body.map(res => res.id)
+  const id = response.body.map((res) => res.id);
 
   expect(id).toBeDefined();
 });
@@ -68,21 +62,46 @@ test('new blog can be added to db', async () => {
     author: 'Abdurrahman Fadhil',
     url: 'https://rahmanfadhil.com/express-rest-api/',
     likes: 0,
-  }
+  };
 
   await api
     .post('/api/blogs')
     .send(newBlog)
     .expect(201)
-    .expect('Content-Type', /application\/json/)
+    .expect('Content-Type', /application\/json/);
 
   const response = await api.get('/api/blogs');
-  const titleContent = response.body.map(res => res.title);
+  const titleContent = response.body.map((res) => res.title);
 
   expect(response.body).toHaveLength(blogs.length + 1);
   expect(titleContent).toContain(
     'How to Build a REST API with Express and Mongoose'
   );
+});
+
+test('likes has a value of 0', async () => {
+  const newBlog = {
+    title: 'How to Build a REST API with Express and Mongoose',
+    author: 'Abdurrahman Fadhil',
+    url: 'https://rahmanfadhil.com/express-rest-api/',
+  };
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const response = await api.get('/api/blogs');
+  const blogId = response.body.map((res) => res.id);
+  const blogToView = blogId[3];
+
+  const resultBlog = await api
+    .get(`/api/blogs/${blogToView}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  expect(resultBlog.body.likes).toEqual(0);
 });
 
 afterAll(async () => {
