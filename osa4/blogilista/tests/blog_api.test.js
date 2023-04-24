@@ -62,6 +62,29 @@ test('has a field called id', async () => {
   expect(id).toBeDefined();
 });
 
+test('new blog can be added to db', async () => {
+  const newBlog = {
+    title: 'How to Build a REST API with Express and Mongoose',
+    author: 'Abdurrahman Fadhil',
+    url: 'https://rahmanfadhil.com/express-rest-api/',
+    likes: 0,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs');
+  const titleContent = response.body.map(res => res.title);
+
+  expect(response.body).toHaveLength(blogs.length + 1);
+  expect(titleContent).toContain(
+    'How to Build a REST API with Express and Mongoose'
+  );
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
