@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const Blog = require('../models/blog');
+const blog = require('../models/blog');
 
 const api = supertest(app);
 
@@ -102,6 +103,23 @@ test('likes has a value of 0', async () => {
     .expect('Content-Type', /application\/json/);
 
   expect(resultBlog.body.likes).toEqual(0);
+});
+
+test('blog without title or url is not added to db', async () => {
+  const newBlog = {
+    title: 'How to Build a REST API with Express and Mongoose',
+    author: 'Abdurrahman Fadhil',
+    likes: 5,
+  };
+
+  await api
+  .post('/api/blogs')
+  .send(newBlog)
+  .expect(400);
+
+  const response = await api.get('/api/blogs');
+
+  expect(response.body).toHaveLength(blogs.length);
 });
 
 afterAll(async () => {
