@@ -122,6 +122,22 @@ test('blog without title or url is not added to db', async () => {
   expect(response.body).toHaveLength(blogs.length);
 });
 
+test('deletion of a blog was succesful', async () => {
+  const response = await api.get('/api/blogs');
+  const currentBlogs = response.body.map(r => r);
+  const blogToDelete = currentBlogs[0];
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204);
+
+  const resAfterDel = await api.get('/api/blogs');
+  const blogsAfterDel = resAfterDel.body.map(r => r.title);
+  
+  expect(blogsAfterDel).toHaveLength(blogs.length - 1);
+  expect(blogsAfterDel).not.toContain(blogToDelete.title)
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
