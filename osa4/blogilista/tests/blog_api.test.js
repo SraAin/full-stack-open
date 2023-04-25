@@ -138,6 +138,27 @@ test('deletion of a blog was succesful', async () => {
   expect(blogsAfterDel).not.toContain(blogToDelete.title)
 });
 
+test('blog updated succesfully', async () => {
+  const updatedBlog = {
+    likes: 14
+  };
+
+  const responseBefore = await api.get('/api/blogs');
+  const blogsBefore = responseBefore.body.map(b => b);
+  const blogToUpdate = blogsBefore[2];
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/);
+
+  const responseAfter = await api.get('/api/blogs');
+  const blogsAfter = responseAfter.body.map(b => b.likes);
+
+  expect(blogsAfter[2]).toEqual(updatedBlog.likes);
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
