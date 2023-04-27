@@ -12,6 +12,10 @@ const blogSchema = mongoose.Schema({
     minlength: 5,
     required: true
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   likes: Number,
 });
 
