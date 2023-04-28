@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFzZGZnIiwiaWQiOiI2NDRiODE0OWVlZjRiMDE3NjM4YTEwM2QiLCJpYXQiOjE2ODI2Njk5MjR9.m-KakX205d0ZdxghbIsl2Dl4WGhPHdwXAkQEThx_Pts
 
 {
-    "title": "Go To Statement Considered Harmful",
+    "title": "Canonical string reduction",
     "author": "Edsger W. Dijkstra",
-    "url": "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-    "user": "644a4d002d98b306413dd5f7"
+    "url": "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html"
 }
