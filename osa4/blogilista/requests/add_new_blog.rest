@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlF3ZW50eSIsImlkIjoiNjQ0YTRkMDAyZDk4YjMwNjQxM2RkNWY3IiwiaWF0IjoxNjgyOTMzNTk0fQ.oEEc4b0A-d_3YGu9AI7d_GxzlcyLdl8EZi18M4jc2vc
 
 {
-    "title": "Canonical string reduction",
-    "author": "Edsger W. Dijkstra",
-    "url": "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html"
+    "title": "First class tests",
+    "author": "Robert C. Martin",
+    "url": "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll"
 }
