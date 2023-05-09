@@ -12,14 +12,15 @@ const tokenExtractor = (request, response, next) => {
 };
 
 const userExtractor = async (req, res, next) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET);
+  if (req.token) {
+    const decodedToken = jwt.verify(req.token, process.env.SECRET);
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: 'token invalid' });
+    }
 
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' });
+    const user = await User.findById(decodedToken.id);
+    req.user = user;
   }
-
-  const user = await User.findById(decodedToken.id);
-  req.user = user;
   next();
 };
 
