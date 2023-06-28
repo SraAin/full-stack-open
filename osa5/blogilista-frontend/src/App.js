@@ -3,6 +3,26 @@ import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
+const Notification = ({ message, color }) => {
+  const infoMsgStyle = {
+    color: color,
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+  };
+
+  if (message === null) {
+    return null;
+  }
+
+  return (
+    <div style={infoMsgStyle}>{message}</div>
+  )
+}
+
 const App = () => {
   const initialValues = {
     title: '',
@@ -11,10 +31,11 @@ const App = () => {
   }
   const [blogs, setBlogs] = useState([]);
   const [newBlog, setNewBlog] = useState(initialValues);
-
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
+  const [infoMsg, setInfoMsg] = useState(null);
+  const [infoMsgStyle, setInfoMsgStyle] = useState({});
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -44,7 +65,11 @@ const App = () => {
       setUsername('');
       setPassword('');
     } catch {
-      console.log('Login failed');
+      setInfoMsgStyle('red');
+      setInfoMsg('wrong username or password');
+      setTimeout(() => {
+        setInfoMsg(null);
+      }, 5000);
     }
   };
 
@@ -60,6 +85,12 @@ const App = () => {
     blogService.createBlog(newBlog).then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog));
     });
+
+    setInfoMsgStyle('green')
+    setInfoMsg(`a new blog ${newBlog.title} by ${newBlog.author} added`);
+    setTimeout(() => {
+      setInfoMsg(null);
+    }, 5000);
   };
 
   const handleNewBlogChange = (event) => {
@@ -74,6 +105,7 @@ const App = () => {
     return (
       <div>
         <h2>Login to application</h2>
+        <Notification message={infoMsg} color={infoMsgStyle} />
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -103,6 +135,7 @@ const App = () => {
     <div>
       <div>
         <h2>Blogs</h2>
+        <Notification message={infoMsg} color={infoMsgStyle} />
         <p>{user.name} logged in</p>
         <button onClick={handleLogout}>logout</button>
         {blogs.map((blog) => (
