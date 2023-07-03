@@ -9,14 +9,7 @@ import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 
 const App = () => {
-  const initialValues = {
-    title: '',
-    author: '',
-    url: '',
-  };
-
   const [blogs, setBlogs] = useState([]);
-  const [newBlog, setNewBlog] = useState(initialValues);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
@@ -36,7 +29,7 @@ const App = () => {
     }
   }, []);
 
-  const blogFormRef = useRef()
+  const blogFormRef = useRef();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -65,30 +58,6 @@ const App = () => {
     window.localStorage.removeItem('loggedUser');
     window.location.reload();
     console.log('user logged out');
-  };
-
-  const addBlog = (event) => {
-    event.preventDefault();
-
-    blogService.createBlog(newBlog).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog));
-    });
-
-    blogFormRef.current.toggleVisibility()
-
-    setInfoMsgStyle('green');
-    setInfoMsg(`a new blog ${newBlog.title} by ${newBlog.author} added`);
-    setTimeout(() => {
-      setInfoMsg(null);
-    }, 5000);
-  };
-
-  const handleNewBlogChange = (event) => {
-    const value = event.target.value;
-    setNewBlog({
-      ...newBlog,
-      [event.target.name]: value,
-    });
   };
 
   if (user === null) {
@@ -132,14 +101,11 @@ const App = () => {
       ))}
       <Togglable ref={blogFormRef}>
         <NewBlogForm
-          infoMsg={infoMsg}
-          infoMsgStyle={infoMsgStyle}
-          user={user}
           blogs={blogs}
-          handleLogout={handleLogout}
-          addBlog={addBlog}
-          newBlog={newBlog}
-          handleNewBlogChange={handleNewBlogChange}
+          setBlogs={setBlogs}
+          blogFormRef={blogFormRef}
+          setInfoMsgStyle={setInfoMsgStyle}
+          setInfoMsg={setInfoMsg}
         />
       </Togglable>
     </div>
