@@ -60,6 +60,15 @@ const App = () => {
     console.log('user logged out');
   };
 
+  const updateBlog = (id, updatedBlog) => {
+    /*setBlogs((prevBlogs) => {
+      const updatedBlogs = [...prevBlogs];
+      updatedBlogs[id] = updatedBlog;
+      return updatedBlogs;
+    });*/
+    setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)));
+  };
+
   if (user === null) {
     return (
       <div>
@@ -97,7 +106,7 @@ const App = () => {
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>logout</button>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
       ))}
       <Togglable ref={blogFormRef}>
         <NewBlogForm
