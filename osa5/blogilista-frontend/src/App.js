@@ -17,7 +17,9 @@ const App = () => {
   const [infoMsgStyle, setInfoMsgStyle] = useState({});
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
   }, []);
 
   useEffect(() => {
@@ -61,12 +63,9 @@ const App = () => {
   };
 
   const updateBlog = (id, updatedBlog) => {
-    /*setBlogs((prevBlogs) => {
-      const updatedBlogs = [...prevBlogs];
-      updatedBlogs[id] = updatedBlog;
-      return updatedBlogs;
-    });*/
-    setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)));
+    const updatedBlogArr = blogs.map((blog) => (blog.id !== id ? blog : updatedBlog))
+    setBlogs(updatedBlogArr)
+    //setBlogs(newBlogArr.sort((a, b) => b.likes - a.likes));
   };
 
   if (user === null) {
