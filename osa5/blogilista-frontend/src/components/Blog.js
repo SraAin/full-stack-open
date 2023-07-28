@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import blogService from '../services/blogs';
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, user, handleBlogUpdate, handleBlogDelete }) => {
   const [blogInfoVisible, setBlogInfoVisible] = useState(false);
+  const [deleteBtnVisible, setDeleteBtnVisible] = useState(false);
 
   const showWhenBlogVisible = { display: blogInfoVisible ? '' : 'none' };
   const hideWhenBlogVisible = { display: blogInfoVisible ? 'none' : '' };
@@ -15,14 +16,28 @@ const Blog = ({ blog, updateBlog }) => {
     marginBottom: 5,
   };
 
-  const addLike = (event) => {
-    event.preventDefault();
-
+  const addLike = () => {
     const updatedBlog = { ...blog, likes: ++blog.likes };
     blogService.updateBlog(blog.id, updatedBlog).then((returnedBlog) => {
-      updateBlog(returnedBlog.id, returnedBlog);
+      handleBlogUpdate(returnedBlog.id, returnedBlog);
     });
   };
+
+  const deleteBlog = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      blogService.deleteBlog(blog.id);
+      handleBlogDelete(blog.id);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      if (user === blog.user.username) {
+        console.log('Jokin täsmää');
+        setDeleteBtnVisible(true);
+      }
+    }
+  }, [user, blog]);
 
   return (
     <div>
@@ -42,6 +57,14 @@ const Blog = ({ blog, updateBlog }) => {
           <p>Likes: {blog.likes}</p>
           <button onClick={addLike}>Like</button>
           <p>{blog.user.name}</p>
+          {deleteBtnVisible && (
+            <button
+              style={{ backgroundColor: 'lightblue' }}
+              onClick={deleteBlog}
+            >
+              Delete
+            </button>
+          )}
         </div>
       </div>
     </div>

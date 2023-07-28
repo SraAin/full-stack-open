@@ -17,20 +17,26 @@ const NewBlogForm = ({
 
   const [newBlog, setNewBlog] = useState(initialValues);
 
-  const addBlog = (event) => {
+  const addBlog = async (event) => {
     event.preventDefault();
+    try {
+      blogFormRef.current.toggleVisibility();
 
-    blogService.createBlog(newBlog).then((returnedBlog) => {
+      const returnedBlog = await blogService.createBlog(newBlog);
       setBlogs(blogs.concat(returnedBlog));
-    });
 
-    blogFormRef.current.toggleVisibility();
-
-    setInfoMsgStyle('green');
-    setInfoMsg(`a new blog ${newBlog.title} by ${newBlog.author} added`);
-    setTimeout(() => {
-      setInfoMsg(null);
-    }, 5000);
+      setInfoMsgStyle('green');
+      setInfoMsg(`a new blog ${newBlog.title} by ${newBlog.author} added`);
+      setTimeout(() => {
+        setInfoMsg(null);
+      }, 5000);
+    } catch {
+      setInfoMsgStyle('red');
+      setInfoMsg('Blog title or url is shorter than minimum allowed lenght');
+      setTimeout(() => {
+        setInfoMsg(null);
+      }, 10000);
+    }
   };
 
   const handleNewBlogChange = (event) => {

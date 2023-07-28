@@ -62,10 +62,31 @@ const App = () => {
     console.log('user logged out');
   };
 
-  const updateBlog = (id, updatedBlog) => {
-    const updatedBlogArr = blogs.map((blog) => (blog.id !== id ? blog : updatedBlog))
-    setBlogs(updatedBlogArr)
+  const handleBlogUpdate = (id, updatedBlog) => {
+    const updatedBlogArr = blogs.map((blog) =>
+      blog.id !== id ? blog : updatedBlog
+    );
+
+    setBlogs(updatedBlogArr);
     //setBlogs(newBlogArr.sort((a, b) => b.likes - a.likes));
+  };
+
+  const handleBlogDelete = (deletedBlog) => {
+    try {
+    const updatedBlogArr = blogs.filter((blog) => blog.id !== deletedBlog);
+    setBlogs(updatedBlogArr);
+    setInfoMsgStyle('green');
+    setInfoMsg('Blog deleted succesfully');
+    setTimeout(() => {
+      setInfoMsg(null);
+    }, 5000);
+    } catch {
+      setInfoMsgStyle('green');
+      setInfoMsg('Blog delete failed');
+      setTimeout(() => {
+        setInfoMsg(null);
+      }, 5000);
+    }
   };
 
   if (user === null) {
@@ -105,7 +126,13 @@ const App = () => {
       <p>{user.name} logged in</p>
       <button onClick={handleLogout}>logout</button>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          handleBlogUpdate={handleBlogUpdate}
+          handleBlogDelete={handleBlogDelete}
+          user={user.username}
+        />
       ))}
       <Togglable ref={blogFormRef}>
         <NewBlogForm
