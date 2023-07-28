@@ -73,13 +73,13 @@ const App = () => {
 
   const handleBlogDelete = (deletedBlog) => {
     try {
-    const updatedBlogArr = blogs.filter((blog) => blog.id !== deletedBlog);
-    setBlogs(updatedBlogArr);
-    setInfoMsgStyle('green');
-    setInfoMsg('Blog deleted succesfully');
-    setTimeout(() => {
-      setInfoMsg(null);
-    }, 5000);
+      const updatedBlogArr = blogs.filter((blog) => blog.id !== deletedBlog);
+      setBlogs(updatedBlogArr);
+      setInfoMsgStyle('green');
+      setInfoMsg('Blog deleted succesfully');
+      setTimeout(() => {
+        setInfoMsg(null);
+      }, 5000);
     } catch {
       setInfoMsgStyle('green');
       setInfoMsg('Blog delete failed');
@@ -134,7 +134,7 @@ const App = () => {
           user={user.username}
         />
       ))}
-      <Togglable ref={blogFormRef}>
+      <Togglable ref={blogFormRef} buttonLabel={'New Blog'}>
         <NewBlogForm
           blogs={blogs}
           setBlogs={setBlogs}

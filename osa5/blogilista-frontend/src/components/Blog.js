@@ -33,7 +33,6 @@ const Blog = ({ blog, user, handleBlogUpdate, handleBlogDelete }) => {
   useEffect(() => {
     if (user) {
       if (user === blog.user.username) {
-        console.log('Jokin täsmää');
         setDeleteBtnVisible(true);
       }
     }
