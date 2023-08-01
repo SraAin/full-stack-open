@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import blogService from '../services/blogs';
 
 const Blog = ({ blog, user, handleBlogUpdate, handleBlogDelete }) => {
   const [blogInfoVisible, setBlogInfoVisible] = useState(false);
@@ -18,16 +17,7 @@ const Blog = ({ blog, user, handleBlogUpdate, handleBlogDelete }) => {
 
   const addLike = () => {
     const updatedBlog = { ...blog, likes: ++blog.likes };
-    blogService.updateBlog(blog.id, updatedBlog).then((returnedBlog) => {
-      handleBlogUpdate(returnedBlog.id, returnedBlog);
-    });
-  };
-
-  const deleteBlog = () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      blogService.deleteBlog(blog.id);
-      handleBlogDelete(blog.id);
-    }
+    handleBlogUpdate(blog.id, updatedBlog);
   };
 
   useEffect(() => {
@@ -39,27 +29,29 @@ const Blog = ({ blog, user, handleBlogUpdate, handleBlogDelete }) => {
   }, [user, blog]);
 
   return (
-    <div>
-      <div style={hideWhenBlogVisible}>
-        <div style={blogStyle}>
-          {blog.title} BY {blog.author}
-          <button onClick={() => setBlogInfoVisible(true)}>View</button>
-        </div>
+    <div style={blogStyle} className="blog">
+      <div>
+        {blog.title} BY {blog.author}
+        <br></br>
+        <button
+          style={hideWhenBlogVisible}
+          onClick={() => setBlogInfoVisible(true)}
+        >
+          View
+        </button>
       </div>
       <div style={showWhenBlogVisible}>
-        <div style={blogStyle}>
+        <div>
           <p>
-            {blog.title} BY {blog.author}{' '}
             <button onClick={() => setBlogInfoVisible(false)}>Hide</button>
           </p>
           <p>{blog.url}</p>
           <p>Likes: {blog.likes}</p>
           <button onClick={addLike}>Like</button>
-          <p>{blog.user.name}</p>
           {deleteBtnVisible && (
             <button
               style={{ backgroundColor: 'lightblue' }}
-              onClick={deleteBlog}
+              onClick={() => handleBlogDelete(blog.id)}
             >
               Delete
             </button>

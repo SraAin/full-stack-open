@@ -63,16 +63,16 @@ const App = () => {
   };
 
   const handleBlogUpdate = (id, updatedBlog) => {
-    const updatedBlogArr = blogs.map((blog) =>
-      blog.id !== id ? blog : updatedBlog
-    );
-
-    setBlogs(updatedBlogArr);
+    blogService.updateBlog(id, updatedBlog);
+    setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)));
     //setBlogs(newBlogArr.sort((a, b) => b.likes - a.likes));
   };
 
   const handleBlogDelete = (deletedBlog) => {
     try {
+      if (window.confirm(`Remove blog`)) {
+        blogService.deleteBlog(deletedBlog);
+      }
       const updatedBlogArr = blogs.filter((blog) => blog.id !== deletedBlog);
       setBlogs(updatedBlogArr);
       setInfoMsgStyle('green');

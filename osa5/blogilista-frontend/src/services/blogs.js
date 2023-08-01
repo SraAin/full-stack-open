@@ -33,8 +33,4 @@ const deleteBlog = async (id) => {
   return request;
 };
 
-const blogs = {
-  getAll, setToken, createBlog, updateBlog, deleteBlog
-};
-
-export default blogs;
+export default { getAll, setToken, createBlog, updateBlog, deleteBlog };
