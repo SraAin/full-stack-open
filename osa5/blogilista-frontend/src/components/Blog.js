@@ -48,6 +48,7 @@ const Blog = ({ blog, user, handleBlogUpdate, handleBlogDelete }) => {
           <p>{blog.url}</p>
           <p>Likes: {blog.likes}</p>
           <button onClick={addLike}>Like</button>
+          <p>{blog.user.name}</p>
           {deleteBtnVisible && (
             <button
               style={{ backgroundColor: 'lightblue' }}

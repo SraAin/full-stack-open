@@ -30,7 +30,7 @@ const NewBlogForm = ({
       setTimeout(() => {
         setInfoMsg(null);
       }, 5000);
-    } catch {
+    } catch (error) {
       setInfoMsgStyle('red');
       setInfoMsg('Blog title or url is shorter than minimum allowed lenght');
       setTimeout(() => {

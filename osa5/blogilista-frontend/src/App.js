@@ -47,7 +47,7 @@ const App = () => {
       setUser(user);
       setUsername('');
       setPassword('');
-    } catch {
+    } catch (error) {
       setInfoMsgStyle('red');
       setInfoMsg('wrong username or password');
       setTimeout(() => {
@@ -70,17 +70,17 @@ const App = () => {
 
   const handleBlogDelete = (deletedBlog) => {
     try {
-      if (window.confirm(`Remove blog`)) {
+      if (window.confirm('Remove blog')) {
         blogService.deleteBlog(deletedBlog);
+        const updatedBlogArr = blogs.filter((blog) => blog.id !== deletedBlog);
+        setBlogs(updatedBlogArr);
+        setInfoMsgStyle('green');
+        setInfoMsg('Blog deleted succesfully');
+        setTimeout(() => {
+          setInfoMsg(null);
+        }, 5000);
       }
-      const updatedBlogArr = blogs.filter((blog) => blog.id !== deletedBlog);
-      setBlogs(updatedBlogArr);
-      setInfoMsgStyle('green');
-      setInfoMsg('Blog deleted succesfully');
-      setTimeout(() => {
-        setInfoMsg(null);
-      }, 5000);
-    } catch {
+    } catch (error) {
       setInfoMsgStyle('green');
       setInfoMsg('Blog delete failed');
       setTimeout(() => {
