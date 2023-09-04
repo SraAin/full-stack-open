@@ -35,4 +35,16 @@ describe('renders content', () => {
     const url = screen.getByText('Likes: 13');
     expect(url).toBeDefined();
   });
+
+  test('render event handler twice when like button has been pressed twice', async () => {
+    const mockHandler = jest.fn();
+
+    render(<Blog blog={blog} handleBlogUpdate={mockHandler} />);
+
+    const button = screen.getByText('Like');
+    await userEvent.click(button);
+    await userEvent.click(button);
+
+    expect(mockHandler.mock.calls).toHaveLength(2);
+  });
 });
