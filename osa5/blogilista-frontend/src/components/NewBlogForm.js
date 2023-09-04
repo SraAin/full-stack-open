@@ -1,14 +1,6 @@
 import { useState } from 'react';
 
-import blogService from '../services/blogs';
-
-const NewBlogForm = ({
-  setBlogs,
-  blogs,
-  blogFormRef,
-  setInfoMsgStyle,
-  setInfoMsg,
-}) => {
+const NewBlogForm = ({ createBlog }) => {
   const initialValues = {
     title: '',
     author: '',
@@ -19,24 +11,13 @@ const NewBlogForm = ({
 
   const addBlog = async (event) => {
     event.preventDefault();
-    try {
-      blogFormRef.current.toggleVisibility();
+    createBlog({
+      title: newBlog.title,
+      author: newBlog.author,
+      url: newBlog.url
+    });
 
-      const returnedBlog = await blogService.createBlog(newBlog);
-      setBlogs(blogs.concat(returnedBlog));
-
-      setInfoMsgStyle('green');
-      setInfoMsg(`a new blog ${newBlog.title} by ${newBlog.author} added`);
-      setTimeout(() => {
-        setInfoMsg(null);
-      }, 5000);
-    } catch (error) {
-      setInfoMsgStyle('red');
-      setInfoMsg('Blog title or url is shorter than minimum allowed lenght');
-      setTimeout(() => {
-        setInfoMsg(null);
-      }, 10000);
-    }
+    setNewBlog(initialValues);
   };
 
   const handleNewBlogChange = (event) => {
@@ -59,6 +40,7 @@ const NewBlogForm = ({
               name="title"
               value={newBlog.title}
               onChange={handleNewBlogChange}
+              placeholder='title'
             />
           </div>
           <div>
@@ -68,6 +50,7 @@ const NewBlogForm = ({
               name="author"
               value={newBlog.author}
               onChange={handleNewBlogChange}
+              placeholder='author'
             />
           </div>
           <div>
@@ -77,6 +60,7 @@ const NewBlogForm = ({
               name="url"
               value={newBlog.url}
               onChange={handleNewBlogChange}
+              placeholder='url'
             />
           </div>
           <button type="submit">Create</button>

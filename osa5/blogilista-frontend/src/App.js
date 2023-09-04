@@ -89,6 +89,27 @@ const App = () => {
     }
   };
 
+  const createBlog = async (newBlog) => {
+    try {
+      blogFormRef.current.toggleVisibility();
+
+      const returnedBlog = await blogService.createBlog(newBlog);
+      setBlogs(blogs.concat(returnedBlog));
+
+      setInfoMsgStyle('green');
+      setInfoMsg(`a new blog ${newBlog.title} by ${newBlog.author} added`);
+      setTimeout(() => {
+        setInfoMsg(null);
+      }, 5000);
+    } catch (error) {
+      setInfoMsgStyle('red');
+      setInfoMsg('Blog title or url is shorter than minimum allowed lenght');
+      setTimeout(() => {
+        setInfoMsg(null);
+      }, 10000);
+    }
+  };
+
   if (user === null) {
     return (
       <div>
@@ -139,8 +160,7 @@ const App = () => {
           blogs={blogs}
           setBlogs={setBlogs}
           blogFormRef={blogFormRef}
-          setInfoMsgStyle={setInfoMsgStyle}
-          setInfoMsg={setInfoMsg}
+          createBlog={createBlog}
         />
       </Togglable>
     </div>
