@@ -14,7 +14,7 @@ const NewBlogForm = ({ createBlog }) => {
     createBlog({
       title: newBlog.title,
       author: newBlog.author,
-      url: newBlog.url
+      url: newBlog.url,
     });
 
     setNewBlog(initialValues);
@@ -36,34 +36,37 @@ const NewBlogForm = ({ createBlog }) => {
           <div>
             Title:
             <input
+              id="title"
               type="text"
               name="title"
               value={newBlog.title}
               onChange={handleNewBlogChange}
-              placeholder='title'
+              placeholder="title"
             />
           </div>
           <div>
             Author:
             <input
+              id="author"
               type="text"
               name="author"
               value={newBlog.author}
               onChange={handleNewBlogChange}
-              placeholder='author'
+              placeholder="author"
             />
           </div>
           <div>
             Link:
             <input
+              id="link"
               type="text"
               name="url"
               value={newBlog.url}
               onChange={handleNewBlogChange}
-              placeholder='url'
+              placeholder="url"
             />
           </div>
-          <button type="submit">Create</button>
+          <button id='submit' type="submit">Create</button>
         </form>
       </div>
     </div>
