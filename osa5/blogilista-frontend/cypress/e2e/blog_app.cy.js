@@ -36,7 +36,7 @@ describe('Blog app', function () {
       cy.login({ username: 'username', password: 'password' });
     });
 
-    it('A blog can be created', function () {
+    it('blog can be created', function () {
       cy.contains('New Blog').click();
       cy.get('#title').type(
         'What is next for Server Side Rendering in Angular'
@@ -49,7 +49,7 @@ describe('Blog app', function () {
       cy.get('#submit').click();
     });
 
-    it('A blog can be liked', function () {
+    it('blog can be liked', function () {
       cy.createBlog({
         title: 'What is next for Server Side Rendering in Angular',
         author: 'Jessica Janiuk',
@@ -60,7 +60,7 @@ describe('Blog app', function () {
       cy.contains('1');
     });
 
-    it('A blog can be dele', function () {
+    it('blog can be deleted', function () {
       cy.createBlog({
         title: 'What is next for Server Side Rendering in Angular',
         author: 'Jessica Janiuk',
@@ -69,6 +69,16 @@ describe('Blog app', function () {
       cy.contains('View').click();
       cy.contains('Delete').click();
       cy.contains('Blog deleted succesfully')
+    });
+
+    it('delete button is visible', function () {
+      cy.createBlog({
+        title: 'What is next for Server Side Rendering in Angular',
+        author: 'Jessica Janiuk',
+        url: 'https://blog.angular.io/whats-next-for-server-side-rendering-in-angular-2a6f27662b67',
+      });
+      cy.contains('View').click();
+      cy.get('#deleteButton');
     });
   });
 });

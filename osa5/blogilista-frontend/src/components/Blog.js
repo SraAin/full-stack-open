@@ -53,6 +53,7 @@ const Blog = ({ blog, user, handleBlogUpdate, handleBlogDelete }) => {
             <button
               style={{ backgroundColor: 'lightblue' }}
               onClick={() => handleBlogDelete(blog.id)}
+              id='deleteButton'
             >
               Delete
             </button>
