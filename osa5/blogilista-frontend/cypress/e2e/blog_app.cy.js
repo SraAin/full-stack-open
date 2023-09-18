@@ -68,7 +68,7 @@ describe('Blog app', function () {
       });
       cy.contains('View').click();
       cy.contains('Delete').click();
-      cy.contains('Blog deleted succesfully')
+      cy.contains('Blog deleted succesfully');
     });
 
     it('delete button is visible', function () {
@@ -79,6 +79,36 @@ describe('Blog app', function () {
       });
       cy.contains('View').click();
       cy.get('#deleteButton');
+    });
+
+    it('blogs are arranged from most to least liked', function () {
+      cy.createBlog({
+        title: 'What is next for Server Side Rendering in Angular',
+        author: 'Jessica Janiuk',
+        url: 'https://blog.angular.io/whats-next-for-server-side-rendering-in-angular-2a6f27662b67',
+      });
+      cy.createBlog({
+        title: 'React Labs: What We Have Been Working On – March 2023',
+        author: 'Joseph Savona',
+        url: 'https://react.dev/blog/2023/03/22/react-labs-what-we-have-been-working-on-march-2023',
+      });
+      //cy.get('.blog').eq(0).contains('View').click();
+      cy.get('.blog').eq(1).contains('View').click();
+      cy.get('.blog')
+        .eq(1)
+        .should(
+          'contain',
+          'React Labs: What We Have Been Working On – March 2023'
+        );
+      cy.get('.like').eq(1).click();
+      cy.reload();
+      cy.get('.blog').eq(0).contains('View').click();
+      cy.get('.blog')
+        .eq(0)
+        .should(
+          'contain',
+          'React Labs: What We Have Been Working On – March 2023'
+        );
     });
   });
 });

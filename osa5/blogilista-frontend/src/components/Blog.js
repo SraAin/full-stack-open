@@ -34,6 +34,7 @@ const Blog = ({ blog, user, handleBlogUpdate, handleBlogDelete }) => {
         {blog.title} BY {blog.author}
         <br></br>
         <button
+          id="view"
           style={hideWhenBlogVisible}
           onClick={() => setBlogInfoVisible(true)}
         >
@@ -47,13 +48,15 @@ const Blog = ({ blog, user, handleBlogUpdate, handleBlogDelete }) => {
           </p>
           <p>{blog.url}</p>
           <p>Likes: {blog.likes}</p>
-          <button onClick={addLike} id='like'>Like</button>
+          <button onClick={addLike} id="like" className='like'>
+            Like
+          </button>
           <p>{blog.user.name}</p>
           {deleteBtnVisible && (
             <button
               style={{ backgroundColor: 'lightblue' }}
               onClick={() => handleBlogDelete(blog.id)}
-              id='deleteButton'
+              id="deleteButton"
             >
               Delete
             </button>
